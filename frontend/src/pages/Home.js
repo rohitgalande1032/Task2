@@ -15,7 +15,7 @@ import Table from './Table'
 import PopupForm from './PopupForm'
 
 function NavScrollExample() {
-  
+
   const [allFiles,setallFiles] = useState([]);
 
   const [modalShow, setModalShow] = useState(false);
