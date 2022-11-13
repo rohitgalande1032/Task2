@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios'
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { Oval } from 'react-loader-spinner'
 
 function MyVerticallyCenteredModal(props) {
   const inidata = {
@@ -16,7 +17,7 @@ function MyVerticallyCenteredModal(props) {
   }
   const [allData,setAllData] = useState(inidata);
   const [selfile,setSelfile] = useState();
-
+  const [loader,setloder] = useState(false);
   function handChange(e) {
     const {name ,value} = e.target;
     setAllData({
@@ -30,6 +31,7 @@ function MyVerticallyCenteredModal(props) {
   }
 
   const uploadFile = () =>{
+    setloder(true);
     const formData  = new FormData();
     formData.append("file",selfile);
     formData.append("upload_preset","ml_default");
@@ -47,7 +49,10 @@ function MyVerticallyCenteredModal(props) {
 
       await axios.post('/create',obj).then(async(data)=>{
         if(data.status==200){
+          setloder(false);
           alert("File Uploaded");
+          props.onHide()
+          // props.fun("1111")
         }
         else{
           alert("Error File Not Uploaded");
@@ -66,6 +71,20 @@ function MyVerticallyCenteredModal(props) {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
+      { loader ?    <Oval
+  height={50}
+  width={800}
+  color="blue"
+  wrapperStyle={{}}
+  wrapperClass=""
+  visible={true}
+  ariaLabel='oval-loading'
+  secondaryColor=""
+  strokeWidth={2}
+  strokeWidthSecondary={2}
+
+/> :
+<>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
          Add New Image Media
@@ -100,12 +119,13 @@ function MyVerticallyCenteredModal(props) {
       </Button>
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
+      </>
+      }
     </Modal>
   );
 }
 
 function PopupForm(props) {
-    // console.log(props)
   const [modalShow, setModalShow] = React.useState(props.val);
 
   return (
@@ -116,6 +136,7 @@ function PopupForm(props) {
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
+        // fun={props.fun}
       />
     </>
   );
